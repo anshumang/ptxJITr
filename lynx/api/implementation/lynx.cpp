@@ -67,10 +67,13 @@ namespace lynx
 	{
 	    report("adding instrumentor ...");
 	    instrumentation::InstrumentationRuntime::Singleton.instrumentors.push_back(instrumentor);
+            instrumentation::PTXInstrumentorVector *instrumentors =  getConfiguredInstrumentors();
+            std::cout << "instrumentors size (addInstrumentor): " << instrumentors->size() << std::endl;
     }
     
 	PTXInstrumentorVector *getConfiguredInstrumentors()
 	{
+            std::cout << "instrumentors size (getConfiguredInstrumentors): " << instrumentation::InstrumentationRuntime::Singleton.instrumentors.size() << std::endl;
 	    return &instrumentation::InstrumentationRuntime::Singleton.instrumentors;
 	}
 	

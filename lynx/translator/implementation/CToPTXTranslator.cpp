@@ -55,10 +55,10 @@ namespace translator
 	    for (p =base; (char*) p < s->p->cur_ip;) {
 	      
 	        l = CToPTXTranslator::translator().translate(s, &info, (void *)p);
-	        #if EMIT_COD
+	        //#if EMIT_COD
 	        l = s->j->print_insn(s, &info, (void *)p);
 	        printf("\n");
-	        #endif
+	        //#endif
 	        if (l <= 0) return;
 	        p = (char*)p + l;
 	        insn_count++;
@@ -1360,9 +1360,9 @@ namespace translator
                  
                 inst.d.identifier = COD_REG + boost::lexical_cast<std::string>(++maxRegister);
                 registers.push_back(inst.d.identifier);
-                sharedMemReg = inst.d.identifier;
+                //sharedMemReg = inst.d.identifier;
                 
-                specialRegisterMap["sharedMemReg"] = sharedMemReg;
+                //specialRegisterMap["sharedMemReg"] = sharedMemReg;
                      
                 inst.d.type = type;          
                 inst.d.addressMode = ir::PTXOperand::Register;
@@ -1408,9 +1408,9 @@ namespace translator
             inst.a.identifier = statements.back().instruction.d.identifier;
             inst.a.addressMode = ir::PTXOperand::Indirect;
             
-            baseReg = inst.d.identifier;
+            //baseReg = inst.d.identifier;
             registers.push_back(inst.d.identifier);
-            specialRegisterMap["baseReg"] = baseReg;
+            //specialRegisterMap["baseReg"] = baseReg;
             
             setPredicate(inst);
             stmt.instruction = inst;
@@ -2017,7 +2017,10 @@ namespace translator
 
         std::string code;
         std::string line;
-        std::ifstream codeFile( resource );
+        //std::ifstream codeFile( resource );
+        std::string resource1("/home/agoswami/gpulynx-2.0.0-ifrit/resources/Yield.c");
+        //std::ifstream codeFile( resource );
+        std::ifstream codeFile( resource1 );
 
         if(codeFile.is_open()){
             while(codeFile.good()){

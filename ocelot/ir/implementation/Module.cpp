@@ -25,7 +25,7 @@
 // this toggles emitting function prototypes in Module::writeIR()
 #define EMIT_FUNCTION_PROTOTYPES 1
 
-#define REPORT_BASE 1
+#define REPORT_BASE 0
 
 ////////////////////////////////////////////////////////////////////////////////
 

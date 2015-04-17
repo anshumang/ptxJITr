@@ -15,6 +15,7 @@
 #include <lynx/instrumentation/interface/BasicBlockInstrumentor.h>
 #include <lynx/instrumentation/interface/ClockCycleCountInstrumentor.h>
 #include <lynx/instrumentation/interface/WarpInstrumentor.h>
+#include <lynx/instrumentation/interface/YieldInstrumentor.h>
 
 // Hydrazine includes
 #include <hydrazine/interface/Exception.h>
@@ -34,6 +35,14 @@ namespace instrumentation
 
     InstrumentationRuntime InstrumentationRuntime::Singleton;
 
+    InstrumentationRuntime::InstrumentationRuntime()
+    {
+       std::cout << "InstrumentationRuntime CTOR" << std::endl; 
+       //lynx::addInstrumentor(new YieldInstrumentor());
+       instrumentors.push_back(new YieldInstrumentor());
+    }
+
+#if 0
     InstrumentationRuntime::InstrumentationRuntime() : toggledActiveInstrumentor(false)
     {
         report("InstrumentationRuntime Constructor");
@@ -121,7 +130,14 @@ namespace instrumentation
 	        }     
 	    }    
     }
+#endif
 
+    InstrumentationRuntime::InstrumentationConfiguration::InstrumentationConfiguration()
+    {
+      std::cout << "InstrumentationConfiguration CTOR" << std::endl; 
+    }
+
+#if 0
     InstrumentationRuntime::InstrumentationConfiguration::InstrumentationConfiguration()
     : 
     clockCycleCount(false),
@@ -184,13 +200,15 @@ namespace instrumentation
 
 	    delete object;
     }
+#endif
 
     InstrumentationRuntime::~InstrumentationRuntime()
     {
+#if 0
         int err = mq_close(messageQueue);
         if(err < 0)
             report( "Failed to close message queue" );
-            
+#endif
         lynx::clearInstrumentors();
         instrumentationContexts.clear();       
     }

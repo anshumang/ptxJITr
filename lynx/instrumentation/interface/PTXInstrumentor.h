@@ -11,7 +11,7 @@
 #include <vector>
 #include <map>
 
-#include <lynx/translator/interface/CToPTXTranslator.h>
+//#include <lynx/translator/interface/CToPTXTranslator.h>
 #include <lynx/instrumentation/interface/kernel_profile.h>
 
 #include <ocelot/transforms/interface/Pass.h>

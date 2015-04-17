@@ -13,7 +13,10 @@
 #include <crt/host_runtime.h>
 #include <lynx/cuda/interface/CudaRuntimeContext.h>
 #include <lynx/cuda/interface/CudaRuntime.h>
+#include <lynx/instrumentation/interface/InstrumentationRuntime.h>
 #include <map>
+#include <lynx/instrumentation/interface/PTXInstrumentor.h>
+#include <lynx/instrumentation/interface/YieldInstrumentor.h>
 
 #include <lynx/api/interface/lynx.h>
 
@@ -34,21 +37,36 @@ using namespace cuda;
 
 static bool dll_opened = false, dll_closed = false;
 static void *cudart = NULL;
+//instrumentation::InstrumentationRuntime instr_;
+static instrumentation::PTXInstrumentor *yielder;
 
 extern "C"
 void** __cudaRegisterFatBinary(void *fatCubin) {
 	std::cout << "__cudaRegisterFatBinary XXXX" << std::endl; 
+	if(!dll_opened){
+		cudart = dlopen("/usr/local/cuda-6.0/lib64/libcudart.so", RTLD_NOW);
+		assert(cudart);
+		yielder = new instrumentation::YieldInstrumentor();
+		dll_opened = true;
+	}
+
     FatBinaryContext fatBinaryContextInstance(fatCubin);
     ir::Module moduleInstance;
     std::stringstream ptxIstream(fatBinaryContextInstance.ptx());
     std::string nameString(fatBinaryContextInstance.name());
     moduleInstance.load(ptxIstream, nameString);
+
+    //lynx::initialize();
     //lynx::instrument(moduleInstance);
-    if(!dll_opened){
-    cudart = dlopen("/usr/local/cuda-6.0/lib64/libcudart.so", RTLD_NOW);
-    assert(cudart);
-    dll_opened = true;
-    }
+    //instrumentation::PTXInstrumentorVector *instrumentors =  lynx::getConfiguredInstrumentors();
+    //std::cout << "instrumentors size: " << instrumentors->size() << std::endl;
+    //instrumentation::PTXInstrumentorVector *instrumentors_ =  &instrumentation::InstrumentationRuntime::Singleton.instrumentors;
+    //instrumentation::PTXInstrumentorVector *instrumentors_ =  &instr_.instrumentors;
+    //std::cout << "instrumentors size (direct access): " << instrumentors_->size() << std::endl;
+    
+    yielder->instrument(moduleInstance);
+    //yielder->validate();
+    
     void** (*__cudaRegisterFatBinaryHandle)(void *fatCubin);
     __cudaRegisterFatBinaryHandle = (void** (*)(void *fatCubin))dlsym(cudart, "__cudaRegisterFatBinary");
     return __cudaRegisterFatBinaryHandle(fatCubin);

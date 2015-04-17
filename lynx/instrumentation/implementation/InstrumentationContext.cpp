@@ -14,6 +14,7 @@ namespace instrumentation
     InstrumentationContext::InstrumentationContext(): toggled(false), 
         _activeInstrumentor(NULL)
     {
+         std::cout << "InstrumentationContext CTOR" << std::endl;
     }
 
     PTXInstrumentor * InstrumentationContext::getActiveInstrumentor()

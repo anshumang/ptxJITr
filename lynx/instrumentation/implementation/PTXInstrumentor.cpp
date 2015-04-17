@@ -73,7 +73,9 @@ namespace instrumentation
 	    report("PTXInstrumentor::instrument...");
         transforms::PassManager manager( &module );
        report("PTXInstrumentor::instrument...transforms::PassManager manager()"); 
-        createPasses(specificationPath());
+        std::string specificationPath("resources/YieldRef.c");
+        //createPasses(specificationPath());
+        createPasses(specificationPath);
 	    report("PTXInstrumentor::instrument...createPasses()");
         for(PassMap::iterator pass = passes.begin(); pass != passes.end(); ++pass)
         {
